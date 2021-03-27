@@ -1,10 +1,12 @@
 require 'json'
 require 'sinatra/base'
+require 'securerandom'
 require 'blockchain'
 
 class Blockchain
   class App < Sinatra::Base
     BLOCKCHAIN = Blockchain.new()
+    NODE_IDENTIFIER = SecureRandom.uuid.delete('-')
 
     set :default_content_type, 'application/json'
 
