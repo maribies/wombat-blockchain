@@ -21,7 +21,7 @@ class Blockchain
     block
   end
 
-  def new_transaction(sender, recipient, amount)
+  def new_transaction(sender:, recipient:, amount:)
     self.current_transactions << {
       sender:     sender,
       recipient:  recipient,

@@ -27,9 +27,9 @@ class Blockchain
       halt 400, 'Missing values' unless required.all? { |k| request_data.key? k }
 
       index = BLOCKCHAIN.new_transaction(
-        request_data[:sender],
-        request_data[:recipient],
-        request_data[:amount],
+        sender:     request_data[:sender],
+        recipient:  request_data[:recipient],
+        amount:     request_data[:amount],
       )
 
       halt 201, JSON.dump({ message: "Transaction will be added to Block #{index}" })
