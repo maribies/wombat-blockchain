@@ -31,17 +31,12 @@ class Blockchain
     self.last_block[:index] + 1
   end
 
-  def hash(block)
-    # Hashes a Block
-  end
-
   def last_block()
     self.chain.last
   end
 
   def hash(block)
-    block_string = JSON.dump(block.sort.to_h)
-    Digest::SHA256.hexdigest block_string
+    Digest::SHA256.hexdigest JSON.dump(block.sort.to_h)
   end
 
   # Simple Proof of Work Algorithm:
