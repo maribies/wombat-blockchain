@@ -3,8 +3,8 @@ require 'json'
 
 class Blockchain
   def initialize(chain: [], current_transactions: [])
-    self.chain = chain
-    self.current_transactions = current_transactions
+    @chain = chain
+    @current_transactions = current_transactions
     self.new_block previous_hash: 1, proof: 100
   end
 
@@ -16,7 +16,7 @@ class Blockchain
       proof:          proof,
       previous_hash:  previous_hash || self.hash(self.last_block),
     }
-    self.current_transactions = []
+    @current_transactions = []
     self.chain << block
     block
   end
@@ -59,6 +59,6 @@ class Blockchain
     guess_hash[0...4] == "0000"
   end
 
+  attr_reader  :chain, :current_transactions
   private
-  attr_accessor  :chain, :current_transactions
 end
