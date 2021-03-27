@@ -19,7 +19,28 @@ class Blockchain
     end
 
     get '/mine' do
-      "We'll mine a new Block"
+      # We must receive a reward for finding the proof.
+      # The sender is "0" to signify that this node has mined a new coin.
+      BLOCKCHAIN.new_transaction(
+        sender:     "0",
+        recipient:  NODE_IDENTIFIER,
+        amount:     1,
+      )
+
+      # Forge the new Block by adding it to the chain
+      last  = BLOCKCHAIN.last_block
+      block = BLOCKCHAIN.new_block(
+        proof: BLOCKCHAIN.proof_of_work(last[:proof]),
+        previous_hash: BLOCKCHAIN.hash(last),
+      )
+
+      halt 200, JSON.dump({
+        message:       "New Block Forged",
+        index:         block[:index],
+        transactions:  block[:transactions],
+        proof:         block[:proof],
+        previous_hash: block[:previous_hash],
+      })
     end
 
     post '/transactions/new' do
