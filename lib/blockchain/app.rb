@@ -57,11 +57,10 @@ class Blockchain
     end
 
     get '/chain' do
-      response = {
+      halt 200, JSON.dump({
         chain:  BLOCKCHAIN.chain,
         length: BLOCKCHAIN.chain.length,
-      }
-      JSON.dump(response)
+      })
     end
   end
 end
