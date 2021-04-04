@@ -1,14 +1,23 @@
 require 'json'
 require 'sinatra/base'
+require "sinatra/reloader"
 require 'securerandom'
 require 'blockchain'
 
 class Blockchain
   class App < Sinatra::Base
+    configure :development do
+      register Sinatra::Reloader
+      after_reload do
+        puts 'reloaded'
+      end
+    end
+
     BLOCKCHAIN = Blockchain.new()
     NODE_IDENTIFIER = SecureRandom.uuid.delete('-')
 
     set :default_content_type, 'application/json'
+    set :erb, layout: :layout
 
     private def request_body
       @request_body ||= request.body.read
@@ -16,6 +25,10 @@ class Blockchain
 
     private def request_data
       @request_data ||= JSON.parse request_body, symbolize_names: true
+    end
+
+    get '/', :provides => 'html' do
+      erb :index
     end
 
     get '/mine' do
