@@ -24,7 +24,13 @@ class Blockchain
     end
 
     private def request_data
-      @request_data ||= JSON.parse request_body, symbolize_names: true
+      # form via website ui
+      @request_data ||= if request.content_type == "application/x-www-form-urlencoded"
+        params[:transaction]
+      else
+        # request via api
+        JSON.parse request_body, symbolize_names: true
+      end
     end
 
     get '/', :provides => 'html' do
@@ -56,6 +62,12 @@ class Blockchain
       })
     end
 
+    private def accepts_html?
+      request.accept.any? { |mimetype| mimetype.to_s == 'text/html' }
+    end
+
+    # Maybe instead of posting to a new url, redirect and show success message in a model?
+    # Or make this whole page have information about what was done and maybe a cool graphic/eventually animation?
     post '/transactions/new' do
       required = [:sender, :recipient, :amount]
       halt 400, 'Missing values' unless required.all? { |k| request_data.key? k }
@@ -66,7 +78,11 @@ class Blockchain
         amount:     request_data[:amount],
       )
 
-      halt 201, JSON.dump({ message: "Transaction will be added to Block #{index}" })
+      if accepts_html?
+        redirect('/')
+      else
+        halt 201, JSON.dump({ message: "Transaction will be added to Block #{index}" })
+      end
     end
 
     get '/chain' do

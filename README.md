@@ -29,3 +29,20 @@ curl -s 'localhost:5000/mine' | jq
 # View the blockchain
 curl -s 'localhost:5000/chain' | jq
 ```
+
+#### Exploring the differences between posting via API and HTML
+```sh
+curl localhost:5000/transactions/new \
+  -i -H 'Content-Type: application/json' -H 'accept: application/json' --data-raw $'{
+ "sender": "my address",
+ "recipient": "someone else\'s address",
+ "amount": 5
+}'
+
+# It's not about the method, but the structure and data sent. :)
+curl localhost:5000/transactions/new \
+  -i \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -H 'accept: text/html' \
+  --data-raw $'transaction%5Bsender%5D=my+address&transaction%5Brecipient%5D=your+address&transaction%5Bamount%5D=8'
+```

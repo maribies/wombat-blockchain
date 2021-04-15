@@ -1,0 +1,14 @@
+<form action="/transactions/new" method="post" id="transactionForm">
+  <label for="sender">To:</label>
+  <input type="text" id="sender" name="transaction[sender]" placeholder="my address">
+
+  <label for="recipient">From:</label>
+  <input type="text" id="recipient" name="transaction[recipient]", placeholder="your address">
+
+  <label for="amount">Amount:</label>
+  <input type="text" id="amount" name="transaction[amount]" placeholder="8">
+
+  <button type="submit" class="btn" id="makeTransaction" form="transactionForm" value="submit">
+    Feed the wombat / Make a transaction
+  </button>
+</form>
