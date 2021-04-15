@@ -4,7 +4,13 @@
   --black: rgb(0,0,0);
   --brown: rgb(139,69,19);
   --lt-brown: rgb(111,78,55);
+  --lavender: rgb(230,230,250);
   --pale-green: rgb(152,251,152);
+  --sky: rgb(0,191,255);
+  --green: rgb(124,252,0);
+  --forest: rgb(34,139,34);
+  --yg: rgb(154,205,50);
+  --dirt: rgb(184,134,11);
 }
 
 /* some normalizations...maybe add normalize.css later */
@@ -40,7 +46,7 @@ body {
 }
 
 .background {
-  background: var(--pale-green);
+  background: var(--lavender);
   height: 100vh;
 }
 
@@ -199,4 +205,86 @@ body {
   height: 100px;
   perspective: 500px;
   margin: 100px;
+}
+
+.btn {
+  height: 50px;
+  width: 150px;
+  text-align: center;
+  text-decoration: none;
+  color: var(--black);
+  border: solid 4px var(--black);
+  border-radius: 4px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-text {
+  position: relative;
+  z-index: 1;
+}
+
+#makeTransaction {
+  background: var(--sky);
+  position: relative;
+}
+
+.grass {
+  background: var(--dirt);
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 30%;
+  width: 100%;
+  display: flex;
+  transform: rotate(0.5turn);
+}
+
+.blade {
+  background: var(--forest);
+  height: 10px;
+  width: 5px;
+  border-radius: 100% 0 80% 0;
+  animation: wind 2s ease alternate infinite;
+}
+
+.blade:nth-child(2n+1) {
+  background: var(--green);
+  height: 12px;
+  border-radius: 0 80% 0 100%;
+  animation: wind2 1s ease alternate infinite;
+}
+
+.blade:nth-child(3n+1) {
+  background: var(--yg);
+  height: 15px;
+  border-radius: 0 60% 0 90%;
+  animation: wind3 1.5s ease alternate infinite;
+}
+
+@keyframes wind {
+  100% {
+    transform: rotate(7deg);
+  }
+}
+
+@keyframes wind2 {
+  100% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes wind3 {
+  100% {
+    transform: rotate(3deg);
+  }
+}
+
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 200px;
 }
