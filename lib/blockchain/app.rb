@@ -1,6 +1,6 @@
 require 'json'
 require 'sinatra/base'
-require "sinatra/reloader"
+require 'sinatra/reloader'
 require 'securerandom'
 require 'blockchain'
 
