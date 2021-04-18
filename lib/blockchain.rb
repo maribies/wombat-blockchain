@@ -5,27 +5,31 @@ require 'uri'
 require 'net/http'
 
 class Blockchain
-  def initialize(chain: [], current_transactions: [])
+  def initialize(chain:, current_transactions:)
     @chain = chain
     @current_transactions = current_transactions
     @nodes = Set.new
-    self.new_block previous_hash: 1, proof: 100
+    self.add_block previous_hash: 1, proof: 100
   end
 
-  def new_block(previous_hash:, proof:)
-    block = {
-      index:          self.chain.length + 1,
-      timestamp:      Time.now.to_f,
-      transactions:   self.current_transactions,
-      proof:          proof,
-      previous_hash:  previous_hash || self.hash_for(self.last_block),
-    }
-    @current_transactions = []
-    self.chain << block
-    block
+  def mine_block(miner:)
+    # Reward the miner for doing the work
+    add_transaction(
+      sender:    "0",
+      recipient: miner,
+      amount:    1,
+    )
+
+    # Forge the new Block by adding it to the chain
+    proof = proof_of_work last_block[:proof]
+    add_block(
+      proof: proof,
+      previous_hash: hash_for(last_block),
+    )
   end
 
-  def new_transaction(sender:, recipient:, amount:)
+
+  def add_transaction(sender:, recipient:, amount:)
     self.current_transactions << {
       sender:     sender,
       recipient:  recipient,
@@ -92,6 +96,20 @@ class Blockchain
   attr_reader :nodes, :chain, :current_transactions
 
   private
+
+  def add_block(previous_hash:, proof:)
+    block = {
+      index:          self.chain.length + 1,
+      timestamp:      Time.now.to_f,
+      transactions:   self.current_transactions,
+      proof:          proof,
+      previous_hash:  previous_hash || self.hash_for(self.last_block),
+    }
+    @current_transactions = []
+    self.chain << block
+    block
+  end
+
 
   # def normalize_address(address)
   #   uri = URI.parse address
