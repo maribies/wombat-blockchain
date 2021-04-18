@@ -1,1 +1,1 @@
-web: bundle exec rackup -I lib -p 5000 config.ru
+web: bundle exec puma -I lib --port "${PORT:-5000}"
