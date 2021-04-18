@@ -54,7 +54,7 @@ class Blockchain
       last  = BLOCKCHAIN.last_block
       block = BLOCKCHAIN.new_block(
         proof: BLOCKCHAIN.proof_of_work(last[:proof]),
-        previous_hash: BLOCKCHAIN.hash(last),
+        previous_hash: BLOCKCHAIN.hash_for(last),
       )
 
       halt 200, JSON.dump({
@@ -92,8 +92,8 @@ class Blockchain
 
     get '/chain' do
       halt 200, JSON.dump({
-        chain:  BLOCKCHAIN.chain,
         length: BLOCKCHAIN.chain.length,
+        chain:  BLOCKCHAIN.chain,
       })
     end
   end
