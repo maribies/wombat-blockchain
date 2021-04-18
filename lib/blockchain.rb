@@ -5,43 +5,33 @@ require 'uri'
 require 'net/http'
 
 class Blockchain
-  def initialize(chain:, pending_transactions:[])
+  def initialize(chain:, difficulty: 4)
+    @difficulty = difficulty
     @chain = chain
-    @pending_transactions = pending_transactions
     @nodes = Set.new
-    self.add_block previous_hash: 0, proof: 0
+    @chain << new_block(previous_hash: 0, proof: 0, transactions: [])
   end
 
   def [](index)
     @chain.fetch index
   end
 
-  def mine_block(miner:)
-    # Reward the miner for doing the work
-    add_transaction(
-      sender:    "0",
-      recipient: miner,
-      amount:    1,
-    )
+  def size
+    @chain.size
+  end
 
-    # Forge the new Block by adding it to the chain
-    proof = proof_of_work last_block[:proof]
-    add_block(
-      proof: proof,
+  def mine_block(miner:, transactions:)
+    @chain << new_block(
+      proof: proof_of_work(last_block[:proof]),
       previous_hash: hash_for(last_block),
+      transactions: [
+        *transactions,
+        { sender: "0", recipient: miner, amount: 1 }, # Reward the miner for doing the work
+      ],
     )
+    @chain.last
   end
 
-
-  def add_transaction(sender:, recipient:, amount:)
-    self.pending_transactions << {
-      sender:     sender,
-      recipient:  recipient,
-      amount:     amount,
-    }
-
-    self.last_block[:index] + 1
-  end
 
   def last_block()
     self.chain.last
@@ -63,7 +53,7 @@ class Blockchain
   def valid_proof?(last_proof, proof)
     guess = "#{last_proof}#{proof}"
     guess_hash = Digest::SHA256.hexdigest guess
-    guess_hash[0...4] == "0000"
+    guess_hash[0...@difficulty] == "0"*@difficulty
   end
 
   def valid_chain?(chain)
@@ -97,21 +87,17 @@ class Blockchain
   end
 
 
-  attr_reader :nodes, :chain, :pending_transactions
+  attr_reader :nodes, :chain
 
   private
 
-  def add_block(previous_hash:, proof:)
-    block = {
-      index:          self.chain.length,
+  def new_block(previous_hash:, proof:, transactions:)
+    { index:          self.chain.length,
       timestamp:      Time.now.to_f,
-      transactions:   self.pending_transactions,
+      transactions:   transactions,
       proof:          proof,
       previous_hash:  previous_hash || self.hash_for(self.last_block),
     }
-    @pending_transactions = []
-    self.chain << block
-    block
   end
 
 

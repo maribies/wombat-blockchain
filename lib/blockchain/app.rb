@@ -15,7 +15,7 @@ class Blockchain
     end
 
     BLOCKCHAIN = Blockchain.new chain: []
-
+    PENDING_TRANSACTIONS = []
     NODE_IDENTIFIER = SecureRandom.uuid.delete('-')
 
     set :default_content_type, 'application/json'
@@ -46,8 +46,11 @@ class Blockchain
       # We must receive a reward for finding the proof.
       # The sender is "0" to signify that this node has mined a new coin.
       block = BLOCKCHAIN.mine_block(
-        miner: NODE_IDENTIFIER
+        miner: NODE_IDENTIFIER,
+        transactions: PENDING_TRANSACTIONS,
       )
+
+      PENDING_TRANSACTIONS.clear
 
       halt 200, JSON.dump({
         message:       "New Block Forged",
@@ -68,11 +71,13 @@ class Blockchain
       required = [:sender, :recipient, :amount]
       halt 400, 'Missing values' unless required.all? { |k| request_data.key? k }
 
-      index = BLOCKCHAIN.add_transaction(
+      PENDING_TRANSACTIONS << {
         sender:    request_data[:sender],
         recipient: request_data[:recipient],
         amount:    request_data[:amount],
-      )
+      }
+
+      index = BLOCKCHAIN.size + 1
 
       if accepts_html?
         flash[:success] = "You have successfully made a transaction."
