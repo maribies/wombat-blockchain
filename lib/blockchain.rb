@@ -5,11 +5,15 @@ require 'uri'
 require 'net/http'
 
 class Blockchain
-  def initialize(chain:, current_transactions:)
+  def initialize(chain:, pending_transactions:[])
     @chain = chain
-    @current_transactions = current_transactions
+    @pending_transactions = pending_transactions
     @nodes = Set.new
-    self.add_block previous_hash: 1, proof: 100
+    self.add_block previous_hash: 0, proof: 0
+  end
+
+  def [](index)
+    @chain.fetch index
   end
 
   def mine_block(miner:)
@@ -30,7 +34,7 @@ class Blockchain
 
 
   def add_transaction(sender:, recipient:, amount:)
-    self.current_transactions << {
+    self.pending_transactions << {
       sender:     sender,
       recipient:  recipient,
       amount:     amount,
@@ -93,19 +97,19 @@ class Blockchain
   end
 
 
-  attr_reader :nodes, :chain, :current_transactions
+  attr_reader :nodes, :chain, :pending_transactions
 
   private
 
   def add_block(previous_hash:, proof:)
     block = {
-      index:          self.chain.length + 1,
+      index:          self.chain.length,
       timestamp:      Time.now.to_f,
-      transactions:   self.current_transactions,
+      transactions:   self.pending_transactions,
       proof:          proof,
       previous_hash:  previous_hash || self.hash_for(self.last_block),
     }
-    @current_transactions = []
+    @pending_transactions = []
     self.chain << block
     block
   end

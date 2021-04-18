@@ -14,7 +14,7 @@ class Blockchain
       end
     end
 
-    BLOCKCHAIN = Blockchain.new chain: [], current_transactions: []
+    BLOCKCHAIN = Blockchain.new chain: []
 
     NODE_IDENTIFIER = SecureRandom.uuid.delete('-')
 
