@@ -28,6 +28,7 @@ html {
 
 body {
   margin: 0;
+  background: var(--lavender);
 }
 
 /* styles */
@@ -43,11 +44,6 @@ body {
 
 .column {
   flex-direction: column;
-}
-
-.background {
-  background: var(--lavender);
-  height: 100vh;
 }
 
 .wombatFace {
@@ -269,6 +265,7 @@ body {
   }
 }
 
+
 @keyframes wind2 {
   100% {
     transform: rotate(5deg);
@@ -287,4 +284,16 @@ body {
   flex-direction: column;
   justify-content: space-between;
   height: 200px;
+}
+
+#flash {
+  margin-top: 30px;
+  width: 100%;
+  border-radius: 4px;
+  padding: 15px;
+  text-align: center;
+}
+
+#flash .success {
+  background-color: var(--pale-green);  
 }

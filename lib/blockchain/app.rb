@@ -3,6 +3,7 @@ require 'sinatra/base'
 require 'sinatra/reloader'
 require 'securerandom'
 require 'blockchain'
+require 'sinatra/flash'
 
 class Blockchain
   class App < Sinatra::Base
@@ -18,6 +19,9 @@ class Blockchain
 
     set :default_content_type, 'application/json'
     set :erb, layout: :layout
+
+    enable :sessions
+    register Sinatra::Flash
 
     private def request_body
       @request_body ||= request.body.read
@@ -79,6 +83,7 @@ class Blockchain
       )
 
       if accepts_html?
+        flash[:success] = "You have successfully made a transaction."
         redirect('/')
       else
         halt 201, JSON.dump({ message: "Transaction will be added to Block #{index}" })
