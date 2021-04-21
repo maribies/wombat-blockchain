@@ -288,12 +288,26 @@ body {
 
 #flash {
   margin-top: 30px;
-  width: 100%;
-  border-radius: 4px;
-  padding: 15px;
+  width: 600px;
   text-align: center;
+  left: 50%;
+  margin-left: -300px;
+  position: fixed;
 }
 
-#flash .success {
+.flash {
+  display: inline-block;
+  border-radius: 4px;
+  padding: 15px;
+}
+
+.success {
   background-color: var(--pale-green);  
+}
+
+.close {
+  top: 0;
+  position: absolute;
+  padding-top: 5px;
+  text-decoration: none;
 }

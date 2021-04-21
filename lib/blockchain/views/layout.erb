@@ -3,6 +3,7 @@
   <head>
     <title>WombatChain</title>
     <link rel="stylesheet" href="/styles.css"></link>
+    <script src="javascript.js"></script>
   </head>
 
   <body>
@@ -11,7 +12,12 @@
     </div>
     <div id='flash'>
       <% flash.each do |type, message| %>
-        <div class='flash <%= type %>'><%= message %></div>
+        <div class='flash closeable <%= type %>'>
+          <%= message %>
+          <a class="close"
+             data-closes-selector="#flash .flash.<%= type %>"
+           >&times;</a>
+        </div>
       <% end %>
     </div>
   </body>
