@@ -74,5 +74,26 @@ RSpec.describe Blockchain do
         expect(block[:previous_hash]).to eq prev_hash
       end
     end
+
+    describe 'the work' do
+      def assert_proof!(difficulty:, starts_with: nil, doesnt_start_with: nil)
+        proof = blockchain_for(difficulty: difficulty).proof_of_work(123)
+        hash  = Digest::SHA256.hexdigest("123#{proof}")
+        expect(hash).to start_with starts_with if starts_with
+        expect(hash).to_not start_with doesnt_start_with if doesnt_start_with
+      end
+
+      it 'is a hash with a number of leading zeros that match the specified difficulty' do
+        assert_proof! difficulty: 1, starts_with: '0'
+        assert_proof! difficulty: 2, starts_with: '00'
+        assert_proof! difficulty: 3, starts_with: '000'
+        assert_proof! difficulty: 0, doesnt_start_with: '000'
+      end
+
+      it 'is a SHA256 hash of the previous proof and the nonce (FIXME: THIS MEANS YOU CAN REWRITE THE CHAIN)' do
+        proof = blockchain_for(difficulty: 2).proof_of_work(123)
+        expect(Digest::SHA256.hexdigest("123#{proof}")).to start_with '00'
+      end
+    end
   end
 end
