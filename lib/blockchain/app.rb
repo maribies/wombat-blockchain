@@ -2,8 +2,9 @@ require 'json'
 require 'sinatra/base'
 require 'sinatra/reloader'
 require 'securerandom'
-require 'blockchain'
 require 'sinatra/flash'
+require 'blockchain'
+require 'blockchain/resolver'
 
 class Blockchain
   class App < Sinatra::Base
