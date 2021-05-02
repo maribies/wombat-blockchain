@@ -2,22 +2,30 @@ require 'digest'
 require 'json'
 
 class Blockchain
-  module ValidProof
+  module Helpers
     def valid_proof?(last_proof, proof, difficulty)
       guess = "#{last_proof}#{proof}"
       guess_hash = Digest::SHA256.hexdigest guess
       guess_hash[0...difficulty] == "0"*difficulty
     end
+
+    def hash_for(block)
+      Digest::SHA256.hexdigest JSON.dump(block.sort.to_h)
+    end
   end
 
-  include ValidProof
+  include Helpers
 
-  attr_reader :chain, :difficulty
+  # accessor for now so we can swap it out if a neighbour has a longer blockchain
+  # b/c we saved it in a constant on the app, we don't have a convenient way of swapping out Blockchain instances
+  attr_accessor :chain
+
+  attr_reader :difficulty
 
   def initialize(chain:, difficulty: 4)
     @difficulty = difficulty
     @chain = chain
-    @chain << new_block(previous_hash: 0, proof: 0, transactions: [])
+    @chain << new_block(previous_hash: 0, proof: 0, transactions: []) # FIXME this only makes sense when chain is empty
   end
 
   def [](index)
@@ -43,10 +51,6 @@ class Blockchain
 
   def last_block()
     self.chain.last
-  end
-
-  def hash_for(block)
-    Digest::SHA256.hexdigest JSON.dump(block.sort.to_h)
   end
 
   # Simple Proof of Work Algorithm:

@@ -5,7 +5,7 @@ require 'blockchain'
 
 class Blockchain
   class Resolver
-    include ValidProof
+    include Helpers
 
     attr_reader :nodes, :difficulty
 
@@ -23,7 +23,7 @@ class Blockchain
     # by replacing our chain with the longest one in the network.
     # :return: <bool> True if our chain was replaced, False if not
     def resolve_conflicts
-      longest_neighbour_chain = nodes
+      nodes
         .filter_map { |node|
           Net::HTTP.get_response node rescue nil
         }
@@ -31,9 +31,6 @@ class Blockchain
         .filter_map { |resp| JSON.parse(resp.body, symbolize_names: true)[:chain] }
         .select { |chain| valid_chain? chain }
         .max_by(&:size)
-
-      return nil if longest_neighbour_chain.size <= chain.size
-      Blockchain.new chain: longest_neighbour_chain, difficulty: @difficulty
     end
 
     def valid_chain?(chain)
