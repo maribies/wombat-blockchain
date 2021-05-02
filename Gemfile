@@ -12,4 +12,5 @@ end
 
 group :test do
   gem "super_diff", require: false # better diffing of nested stuctures
+  gem 'simplecov', require: false
 end

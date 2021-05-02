@@ -1,6 +1,4 @@
-require 'super_diff/rspec'
-require 'blockchain'
-
+require 'spec_helper'
 
 RSpec.describe Blockchain do
   def blockchain_for(chain: [], difficulty: 0)

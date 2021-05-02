@@ -1,10 +1,17 @@
 ENV['RACK_ENV'] = 'test'
 
+require 'simplecov'
+SimpleCov.start do
+  add_filter "/spec/"
+end
+
 # in large part, modified from capybara-3.35.3/lib/capybara/rspec.rb
 require 'rspec/core'
 require 'capybara/dsl'
 require 'capybara/rspec/matchers'
 require 'capybara/rspec/matcher_proxies'
+require 'super_diff/rspec'
+
 require 'blockchain/app'
 Capybara.app = Blockchain::App
 
