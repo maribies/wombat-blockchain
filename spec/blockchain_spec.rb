@@ -65,7 +65,7 @@ RSpec.describe Blockchain do
       it 'contains a valid proof' do
         prev_proof = blockchain[block[:index]-1][:proof]
         crnt_proof = block[:proof]
-        valid      = blockchain.valid_proof? prev_proof, crnt_proof
+        valid      = blockchain.valid_proof? prev_proof, crnt_proof, blockchain.difficulty
         expect(valid).to eq true
       end
 
