@@ -10,6 +10,11 @@ Inspo:
 rackup -I lib -p 5000
 ```
 
+### To run tests:
+```sh
+rspec
+```
+
 ### To interact with server:
 
 ```sh

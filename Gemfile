@@ -7,6 +7,7 @@ gem 'sinatra-flash'
 
 group :development, :test do
   gem 'rspec'
+  gem 'capybara'
 end
 
 group :test do
