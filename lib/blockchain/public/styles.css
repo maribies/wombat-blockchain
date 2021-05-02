@@ -109,6 +109,13 @@ body {
   bottom: 0px;
   border-radius: 50%;
   z-index: 1;
+  animation: blink 5s ease-in-out 1s;
+  animation-play-state: running;
+}
+
+.eye-container:hover > .eyelid {
+  animation: blink 5s ease-in-out infinite 5s;
+  animation-play-state: running;
 }
 
 .eyelid-left {
@@ -119,6 +126,16 @@ body {
 .eyelid-right {
   right: 34%;
   transform: rotate(10deg);
+}
+
+@keyframes blink {
+  10% {
+    height: 15px;
+    transform: translateY(5px);
+  }
+  20%, 100% {
+    height: 12px;
+  }
 }
 
 .eye-left {
