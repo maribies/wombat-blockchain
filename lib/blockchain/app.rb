@@ -1,9 +1,9 @@
 require 'json'
 require 'sinatra/base'
 require 'sinatra/reloader'
+require 'sinatra/flash'
 require 'securerandom'
 require 'blockchain'
-require 'sinatra/flash'
 
 class Blockchain
   class App < Sinatra::Base
@@ -39,6 +39,13 @@ class Blockchain
     end
 
     get '/', :provides => 'html' do
+      if App.errors.any?
+        App.errors.each { |e|
+          flash[:error] =  e.to_s
+        }
+        App.set :errors, []
+      else
+      end
       erb :index
     end
 
@@ -68,8 +75,16 @@ class Blockchain
     # Maybe instead of posting to a new url, redirect and show success message in a model?
     # Or make this whole page have information about what was done and maybe a cool graphic/eventually animation?
     post '/transactions/new' do
-      required = [:sender, :recipient, :amount]
-      halt 400, 'Missing values' unless required.all? { |k| request_data.key? k }
+      begin
+        required = [:sender, :recipient, :amount]
+        raise ArgumentError.new "Missing values" if request_data.values.include? '' || required.all? { |k| test1.key? k }
+      rescue ArgumentError => error
+        App.set :errors, [error]
+        App.errors.each { |e|
+          flash[:error] =  e.to_s 
+        }
+        redirect('/')
+      end
 
       PENDING_TRANSACTIONS << {
         sender:    request_data[:sender],

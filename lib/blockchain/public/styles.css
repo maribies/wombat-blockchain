@@ -11,6 +11,8 @@
   --forest: rgb(34,139,34);
   --yg: rgb(154,205,50);
   --dirt: rgb(184,134,11);
+  --crimson: rgb(167, 29, 49);
+  --white: rgb(252, 252, 252);
 }
 
 /* some normalizations...maybe add normalize.css later */
@@ -320,6 +322,11 @@ body {
 
 .success {
   background-color: var(--pale-green);  
+}
+
+.error {
+  background-color: var(--crimson);
+  color: var(--white);
 }
 
 .close {
