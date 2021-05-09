@@ -4,6 +4,7 @@ require 'sinatra/reloader'
 require 'sinatra/flash'
 require 'securerandom'
 require 'blockchain'
+require 'blockchain/resolver'
 
 class Blockchain
   class App < Sinatra::Base
@@ -14,9 +15,12 @@ class Blockchain
       end
     end
 
-    BLOCKCHAIN = Blockchain.new chain: []
-    PENDING_TRANSACTIONS = []
-    NODE_IDENTIFIER = SecureRandom.uuid.delete('-')
+    # `||=` b/c of the reloader
+    DIFFICULTY           ||= 4
+    RESOLVER             ||= Blockchain::Resolver.new difficulty: DIFFICULTY
+    BLOCKCHAIN           ||= Blockchain.new chain: [], difficulty: DIFFICULTY
+    PENDING_TRANSACTIONS ||= []
+    NODE_IDENTIFIER      ||= SecureRandom.uuid.delete('-')
 
     set :default_content_type, 'application/json'
     set :erb, layout: :layout
@@ -44,7 +48,6 @@ class Blockchain
           flash[:error] =  e.to_s
         }
         App.set :errors, []
-      else
       end
       erb :index
     end
@@ -107,6 +110,29 @@ class Blockchain
         length: BLOCKCHAIN.chain.length,
         chain:  BLOCKCHAIN.chain,
       })
+    end
+
+    post '/nodes' do
+      nodes = request_data[:nodes]
+      nodes.nil? and halt 400, { error: 'Please supply a valid list of nodes' }
+
+      nodes.each { |node| RESOLVER.register_node node }
+
+      halt 201, JSON.dump(
+        message: 'New nodes have been added',
+        total_nodes: RESOLVER.nodes.to_a,
+      )
+    end
+
+
+    get '/nodes/resolve' do
+      chain = RESOLVER.resolve_conflicts
+      message = 'Our chain is authoritative'
+      if chain && chain.size > BLOCKCHAIN.size
+        BLOCKCHAIN.chain = chain
+        message = 'Our chain was replaced'
+      end
+      halt 200, JSON.dump(new_chain: BLOCKCHAIN.chain, message: message)
     end
   end
 end
