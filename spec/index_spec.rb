@@ -9,13 +9,13 @@ RSpec.describe "Humans using the app", type: :feature do
   end
 
   describe 'making a transaction' do
-    it 'errors if missing all values' do
+    pending 'errors if missing all values' do
       page.visit "/"
       page.find("#makeTransaction").click
       expect(page).to have_content "Missing values"
     end
 
-    it 'errors if missing a value' do
+    pending 'errors if missing a value' do
       page.visit "/"
       page.fill_in 'transaction[sender]', with: 'my address'
       page.find("#makeTransaction").click

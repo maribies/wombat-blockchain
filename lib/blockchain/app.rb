@@ -80,13 +80,17 @@ class Blockchain
     post '/transactions/new' do
       begin
         required = [:sender, :recipient, :amount]
-        raise ArgumentError.new "Missing values" if request_data.values.include? '' || required.all? { |k| test1.key? k }
+        raise ArgumentError.new "Missing values" if request_data.values.include? '' || required.sort == request_data.keys.sort
       rescue ArgumentError => error
         App.set :errors, [error]
-        App.errors.each { |e|
-          flash[:error] =  e.to_s 
-        }
-        redirect('/')
+        if accepts_html?
+          App.errors.each { |e|
+            flash[:error] =  e.to_s
+          }
+          redirect('/')
+        else
+          halt 400, JSON.dump({ message: e.to_s })
+        end
       end
 
       PENDING_TRANSACTIONS << {

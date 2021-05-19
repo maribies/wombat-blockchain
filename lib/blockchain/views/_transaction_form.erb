@@ -1,12 +1,15 @@
 <form action="/transactions/new" method="post" id="transactionForm" class="form">
-  <label for="sender">To:</label>
-  <input type="text" id="sender" name="transaction[sender]" placeholder="my address">
+  <label for="sender" class="label">To</label>
+  <input type="text" id="sender" name="transaction[sender]" placeholder="my address" class="input">
+  <output for="sender" id="senderError" class="errorText">Please enter an address</output>
 
-  <label for="recipient">From:</label>
-  <input type="text" id="recipient" name="transaction[recipient]", placeholder="your address">
+  <label for="recipient" class="label">From</label>
+  <input type="text" id="recipient" name="transaction[recipient]", placeholder="your address" class="input">
+  <output for="recipient" id="recipientError" class="errorText">Please enter an address</output>
 
-  <label for="amount">Amount:</label>
-  <input type="text" id="amount" name="transaction[amount]" placeholder="8">
+  <label for="amount" class="label">Amount</label>
+  <input type="text" id="amount" name="transaction[amount]" placeholder="8" class="input">
+  <output for="amount" id="amountError" class="errorText">Please enter a value</output>
 
   <button type="submit" class="btn" id="makeTransaction" form="transactionForm" value="submit">
     <div class="btn-text">Make a transaction /</div>

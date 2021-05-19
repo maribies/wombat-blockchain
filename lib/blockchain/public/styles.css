@@ -1,18 +1,19 @@
 :root {
+  --crimson: rgb(167, 29, 49);
+  --dirt: rgb(184,134,11);
+  --brown: rgb(139,69,19);
+  --lt-brown: rgb(111,78,55);
+  --pale-green: rgb(152,251,152);
+  --green: rgb(124,252,0);
+  --yellow-green: rgb(154,205,50);
+  --forest: rgb(34,139,34);
+  --sky: rgb(0,191,255);
+  --lavender: rgb(230,230,250);
+  --dark-byzantium: rgb(75, 36, 74);
+  --white: rgb(252, 252, 252);
   --main-gray: rgb(105,105,105);
   --lt-gray: rgb(128,128,128);
   --black: rgb(0,0,0);
-  --brown: rgb(139,69,19);
-  --lt-brown: rgb(111,78,55);
-  --lavender: rgb(230,230,250);
-  --pale-green: rgb(152,251,152);
-  --sky: rgb(0,191,255);
-  --green: rgb(124,252,0);
-  --forest: rgb(34,139,34);
-  --yg: rgb(154,205,50);
-  --dirt: rgb(184,134,11);
-  --crimson: rgb(167, 29, 49);
-  --white: rgb(252, 252, 252);
 }
 
 /* some normalizations...maybe add normalize.css later */
@@ -228,11 +229,13 @@ body {
   text-align: center;
   text-decoration: none;
   color: var(--black);
-  border: solid 4px var(--black);
+  border: solid 1px transparent;
   border-radius: 4px;
   align-items: center;
   display: flex;
   flex-direction: column;
+  margin-top: 10px;
+  padding: 5px;
 }
 
 .btn-text {
@@ -254,6 +257,7 @@ body {
   width: 100%;
   display: flex;
   transform: rotate(0.5turn);
+  border-radius: 4px 4px 0 0;
 }
 
 .blade {
@@ -272,7 +276,7 @@ body {
 }
 
 .blade:nth-child(3n+1) {
-  background: var(--yg);
+  background: var(--yellow-green);
   height: 15px;
   border-radius: 0 60% 0 90%;
   animation: wind3 1.5s ease alternate infinite;
@@ -302,7 +306,39 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 200px;
+}
+
+.input {
+  height: 35px;
+  text-decoration: none;
+  color: var(--black);
+  border: solid 1px var(--white);
+  border-radius: 4px;
+  align-items: center;
+  margin-bottom: 5px;
+  padding: 5px;
+}
+
+.input:focus {
+  border: solid 1px var(--dark-byzantium);
+}
+
+.error .input:focus {
+  border: solid 1px var(--crimson);
+}
+
+.errorText {
+  size: 12px;
+  color: var(--crimson);
+}
+
+#senderError, #recipientError, #amountError {
+  display: none;
+}
+
+.label {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 #flash {
